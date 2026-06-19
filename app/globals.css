@@ -1,0 +1,957 @@
+/* ============================================================
+   globals.css
+   SOURCE: erichuguenin.md — Design tokens, Navbar, Hero
+   ============================================================ */
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,600,700,900&display=swap');
+
+/* ─── CSS Custom Properties ──────────────────────────────────── */
+:root {
+  /* Colors — erichuguenin.md palette */
+  --color-bg:         #050505;
+  --color-text:       #f5f2ea;
+  --color-text-muted: #9a9a9a;
+  --color-border:     rgba(255, 255, 255, 0.14);
+
+  /* Font — loaded via next/font in layout.js */
+  --font-primary: var(--font-geist, "Arial", sans-serif);
+
+  /* Spacing */
+  --gutter:          clamp(24px, 4vw, 60px);
+  --section-padding: clamp(60px, 10vw, 160px);
+
+  /* Nav */
+  --nav-height: 70px;
+  --nav-z:      1000;
+
+  /* Easing — exact values from erichuguenin.md */
+  --ease-main:   cubic-bezier(0.6, 0.01, 0.05, 1);
+  --ease-out:    cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-gentle: cubic-bezier(0.38, 0.005, 0.215, 1);
+}
+
+/* ─── Reset ──────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ─── Scrollbar — hidden globally ────────────────────────────── */
+html,
+body {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─── Base ───────────────────────────────────────────────────── */
+html {
+  font-size: 16px;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ─── PAGE LOADER (PageLoader.jsx — CSS modules handles its own styles) */
+/* Keeping .pl* classes for legacy Preloader.jsx reference */
+.pl {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.pl__card {
+  position: relative;
+  width: 300px;
+  height: 400px;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.pl__slide {
+  position: absolute;
+  inset: 0;
+}
+
+.pl__slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.pl__slide--black {
+  background: #050505;
+}
+
+.pl__fill {
+  position: fixed;
+  inset: 0;
+  background: #050505;
+  z-index: 10000;
+  display: none;
+  pointer-events: none;
+}
+
+/* ─── NAVBAR ─────────────────────────────────────────────────── */
+/* SOURCE: erichuguenin.md — NAVBAR section */
+
+/* Navbar: always frosted glass — GSAP handles opacity/y reveal on scroll */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--nav-z);
+  height: var(--nav-height);
+  padding: 0 var(--gutter);
+  display: flex;
+  align-items: center;
+  background: rgba(5, 5, 5, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* Navbar roll-link cluster */
+.nav-roll-links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.nav-roll-links .roll-link {
+  color: var(--color-text-muted);
+}
+
+.nav-roll-links .roll-link--active {
+  color: var(--color-text);
+}
+
+/* Logo */
+.site-logo {
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: opacity 0.2s ease;
+}
+
+.site-logo:hover {
+  opacity: 0.6;
+}
+
+/* Nav links list */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.nav-links a:hover {
+  opacity: 0.5;
+}
+
+/* ─── AVAILABLE LINK — shared by navbar and hero ──────────────── */
+/* Doubled text in source confirms hover slide-up reveal pattern  */
+.available-link {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 1em;
+  line-height: 1;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.available-link__top,
+.available-link__bottom {
+  display: block;
+  transition: transform 0.4s cubic-bezier(0.76, 0, 0.24, 1);
+  will-change: transform;
+  white-space: nowrap;
+}
+
+/* Bottom copy sits below, ready to rise up on hover */
+.available-link__bottom {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateY(100%);
+}
+
+.available-link:hover .available-link__top {
+  transform: translateY(-100%);
+}
+
+.available-link:hover .available-link__bottom {
+  transform: translateY(0%);
+}
+
+/* Mobile hamburger — hidden at desktop */
+.nav-mobile-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: var(--color-text);
+  line-height: 1;
+}
+
+.nav-mobile-toggle span {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background: var(--color-text);
+  margin-bottom: 5px;
+  transition: opacity 0.2s ease;
+}
+
+.nav-mobile-toggle span:last-child {
+  margin-bottom: 0;
+}
+
+/* ─── HERO ───────────────────────────────────────────────────── */
+/* SOURCE: erichuguenin.md — HERO SECTION */
+/* 100vh, white bg, left-aligned, pure typography */
+
+.hero {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: calc(var(--nav-height) + 40px) var(--gutter) 40px;
+  background: var(--color-bg);
+  position: relative;
+}
+
+/* Vertically centers the text block within the available space */
+.hero__content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: center;
+  gap: clamp(16px, 2vw, 32px);
+}
+
+/* Display name — dominant typographic element */
+.hero__name {
+  font-size: clamp(48px, 8vw, 120px);
+  font-weight: 300;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--color-text);
+  margin: 0;
+}
+
+/* Tagline — three stacked lines */
+.hero__tagline {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+}
+
+.hero__tagline-line {
+  display: block;
+  font-size: clamp(16px, 2vw, 28px);
+  font-weight: 300;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+}
+
+/* "Available" in hero — same component as nav, extra top margin */
+.available-hero {
+  margin-top: clamp(16px, 2vw, 32px);
+  font-size: 13px;
+}
+
+/* ─── SCROLL HINT ─────────────────────────────────────────────── */
+/* "Click to scroll" label + bouncing arrow at bottom of hero     */
+
+.scroll-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding-bottom: 4px;
+}
+
+.scroll-hint__label {
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--color-text-muted);
+  text-transform: lowercase;
+}
+
+.scroll-hint__arrow {
+  display: block;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--color-text-muted);
+  will-change: transform;
+}
+
+/* ─── MOBILE (old navbar/hero) ───────────────────────────────── */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+  .nav-mobile-toggle {
+    display: block;
+  }
+  .hero__name {
+    font-size: clamp(36px, 11vw, 64px);
+  }
+  .hero__tagline-line {
+    font-size: clamp(14px, 4vw, 20px);
+  }
+}
+
+/* ─── SCROLL SPACER ──────────────────────────────────────────── */
+/* Temporary scroll depth until next page sections are built      */
+.scroll-spacer {
+  height: 100vh;
+}
+
+/* ─── WORKS INTRO ─────────────────────────────────────────────── */
+.works-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--nav-height) + 24px) var(--gutter) var(--gutter);
+  background: var(--color-bg);
+  color: var(--color-text);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.works-intro__inner {
+  width: min(600px, 86vw);
+  text-align: center;
+  transform: translateY(-2vh);
+}
+
+.works-intro__eyebrow {
+  margin: 0 0 clamp(14px, 1.8vw, 24px);
+  font-size: clamp(10px, 0.9vw, 12px);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.works-intro__composition {
+  position: relative;
+  min-height: clamp(145px, 19vw, 220px);
+}
+
+.works-intro__word {
+  margin: 0;
+  font-size: clamp(32px, 4.8vw, 68px);
+  font-weight: 500;
+  line-height: 0.82;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+
+.works-intro__collection {
+  transform: translateX(-1vw);
+}
+
+.works-intro__recent {
+  margin-top: clamp(8px, 1vw, 14px);
+  transform: translateX(4vw);
+}
+
+.works-intro__work {
+  margin-top: clamp(6px, 0.8vw, 12px);
+  transform: translateX(-3vw);
+}
+
+.works-intro__italic {
+  position: absolute;
+  z-index: 2;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(22px, 3vw, 42px);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--color-text);
+}
+
+.works-intro__of {
+  right: 2%;
+  top: 3%;
+}
+
+.works-intro__my {
+  left: 12%;
+  top: 37%;
+}
+
+/* ─── WORKS COLLECTION ───────────────────────────────────────── */
+.works-collection {
+  position: relative;
+  z-index: 4;
+  min-height: 100vh;
+  margin-top: -1px;
+  padding: clamp(52px, 7vw, 96px) var(--gutter) clamp(90px, 11vw, 150px);
+  background: transparent;
+  color: var(--color-text);
+}
+
+.works-collection__grid {
+  width: min(1280px, 100%);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.2vw, 16px);
+}
+
+.work-card-row {
+  display: flex;
+  align-items: stretch;
+  gap: clamp(10px, 1vw, 14px);
+}
+
+.work-card {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: clamp(340px, 40vw, 520px);
+  overflow: hidden;
+  border-radius: 8px;
+  background: #000000;
+  isolation: isolate;
+  transition:
+    flex-grow 700ms var(--ease-out),
+    filter 700ms var(--ease-out),
+    opacity 700ms var(--ease-out);
+}
+
+.work-card-row:has(.work-card:hover) .work-card {
+  flex-grow: 0.62;
+  opacity: 0.78;
+  filter: saturate(0.75);
+}
+
+.work-card-row:has(.work-card:hover) .work-card:hover {
+  flex-grow: 1.85;
+  opacity: 1;
+  filter: saturate(1);
+}
+
+.work-card__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.88;
+  transform: scale(1);
+  transition:
+    transform 700ms var(--ease-out),
+    opacity 700ms var(--ease-out);
+}
+
+.work-card:hover .work-card__media {
+  opacity: 1;
+  transform: scale(1.06);
+}
+
+.work-card__shade,
+.work-card__blur {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.work-card__shade {
+  z-index: 1;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.32) 48%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  transition: background 700ms var(--ease-out);
+}
+
+.work-card:hover .work-card__shade {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.94) 0%,
+    rgba(0, 0, 0, 0.46) 50%,
+    rgba(0, 0, 0, 0.12) 100%
+  );
+}
+
+.work-card__blur {
+  z-index: 2;
+  opacity: 0;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  transition: opacity 700ms var(--ease-out);
+}
+
+.work-card:hover .work-card__blur {
+  opacity: 1;
+}
+
+.work-card__badge {
+  position: absolute;
+  z-index: 4;
+  top: 16px;
+  right: 16px;
+  padding: 8px 10px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.work-card__content {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: clamp(18px, 2vw, 28px);
+}
+
+.work-card__content-inner {
+  transform: translateY(92px);
+  transition: transform 700ms var(--ease-out);
+}
+
+.work-card:hover .work-card__content-inner {
+  transform: translateY(0);
+}
+
+.work-card__top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: clamp(22px, 2.4vw, 34px);
+}
+
+.work-card__meta {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.5);
+  font-family: monospace;
+  font-size: 12px;
+}
+
+.work-card__title {
+  margin: 8px 0 0;
+  color: #ffffff;
+  font-size: clamp(28px, 3vw, 42px);
+  font-weight: 650;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.work-card__arrow {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  background: #ffffff;
+  color: #000000;
+  font-size: 18px;
+  text-decoration: none;
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 500ms var(--ease-out),
+    transform 500ms var(--ease-out);
+}
+
+.work-card:hover .work-card__arrow {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.work-card__details {
+  max-width: 620px;
+  opacity: 0;
+  transition: opacity 500ms var(--ease-out);
+}
+
+.work-card:hover .work-card__details {
+  opacity: 1;
+}
+
+.work-card__type {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.work-card__summary {
+  margin: 12px 0 0;
+  max-width: 56ch;
+  color: rgba(255, 255, 255, 0.74);
+  font-size: clamp(14px, 1.2vw, 16px);
+  line-height: 1.65;
+}
+
+.work-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.work-card__tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 7px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ─── LANDING ────────────────────────────────────────────────── */
+/* Full-viewport typographic layout — replaces Navbar + Hero     */
+/* SOURCE: eric.png reference image                               */
+
+
+.landing {
+  height: 100vh;
+  /* Reduced top padding so ERIC/HUGUENIN sit closer to the top */
+  padding: clamp(12px, 1.5vw, 24px) var(--gutter) var(--gutter);
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg);
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+}
+
+/* ── Two-column content grid ───────────────────────────────────── */
+/* Left col: ERIC + tagline  |  Right col: HUGUENIN + pill + nav  */
+.landing__content {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding-top: clamp(16px, 2vw, 30px);
+}
+
+.landing__left {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 2vw, 24px);
+}
+
+.landing__right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* pins the group to the right gutter */
+  gap: clamp(14px, 2vw, 24px);
+}
+
+/* Sizes naturally to KOLAWOLE's text width.
+   The info row stretches to that same width, so:
+   Available pill left edge = K  |  nav right edge = E  */
+.landing__right-group {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 2vw, 24px);
+}
+
+.landing__first,
+.landing__last {
+  font-size: clamp(48px, 9vw, 125px);
+  font-weight: 900;
+  line-height: 0.88;
+  letter-spacing: -0.03em;
+  color: var(--color-text);
+  margin: 0;
+  text-transform: uppercase;
+}
+
+/* Left: tagline */
+.landing__tagline {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+}
+
+.landing__tag-line {
+  display: block;
+  font-size: clamp(10px, 0.9vw, 13px);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--color-text);
+  text-transform: uppercase;
+}
+
+/* Right: available pill + nav links */
+.landing__right-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ── Available pill ────────────────────────────────────────────── */
+/* De-fill hover: dark background slides out to the left on hover,
+   revealing the white page behind. No border in either state.     */
+.available-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  border: none;
+  outline: none;
+
+  /* Gradient: left half = dark, right half = transparent.
+     background-size 200% means the full gradient is 2× the element.
+     Shifting background-position from 0% (shows dark) → 100% (shows
+     transparent) animates the dark bg sliding out to the left.     */
+  background: linear-gradient(
+    90deg,
+    var(--color-text) 50%,
+    transparent     50%
+  );
+  background-size: 200% 100%;
+  background-position: 0% center;
+  color: var(--color-bg);
+
+  /* Both hover-enter and hover-leave: bg slides over 0.55s,
+     text color snaps after a 0.4s delay (when bg is ~73% gone).   */
+  transition: background-position 0.55s cubic-bezier(0.76, 0, 0.24, 1),
+              color 0s 0.4s;
+}
+
+.available-pill:hover {
+  background-position: 100% center; /* shows transparent half */
+  color: var(--color-text);
+  outline: none;
+}
+
+.available-pill__dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #00c853;
+  flex-shrink: 0;
+}
+
+/* ── Landing nav links ─────────────────────────────────────────── */
+.landing__nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: right;
+}
+
+/* ── Roll-up text hover (from ghuynguyen.md) ────────────────────── */
+/* Each letter is a span with a ::before clone sitting just below,
+   ready to rise up and replace the real letter on hover.          */
+.roll-link {
+  display: inline-block;
+  overflow: hidden;
+  height: 1em;
+  line-height: 1;
+  text-decoration: none;
+  color: var(--color-text);
+  font-size: clamp(12px, 1vw, 14px);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.roll-letter {
+  display: inline-block;
+  position: relative;
+  /* Duration 0.5s matches ghuynguyen.md; stagger set via inline style */
+  transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+/* Clone of the letter sitting one line-height below, ready to roll up */
+.roll-letter::before {
+  content: attr(data-letter);
+  position: absolute;
+  top: 100%;
+  left: 0;
+}
+
+.roll-link:hover .roll-letter {
+  transform: translateY(-100%);
+}
+
+
+/* ─── LANDING MOBILE ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .landing__content {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .landing__first,
+  .landing__last {
+    font-size: clamp(44px, 14vw, 80px);
+  }
+
+  .landing__last {
+    text-align: left;
+  }
+
+  .landing__right-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .landing__tag-line {
+    font-size: clamp(9px, 2.5vw, 12px);
+  }
+
+  .works-intro {
+    align-items: flex-start;
+    padding-top: calc(var(--nav-height) + 56px);
+  }
+
+  .works-intro__inner {
+    width: 100%;
+    transform: none;
+  }
+
+  .works-intro__composition {
+    min-height: clamp(150px, 54vw, 230px);
+  }
+
+  .works-intro__word {
+    font-size: clamp(34px, 11vw, 54px);
+    line-height: 0.84;
+    letter-spacing: 0;
+  }
+
+  .works-intro__collection,
+  .works-intro__recent,
+  .works-intro__work {
+    transform: none;
+  }
+
+  .works-intro__italic {
+    font-size: clamp(24px, 8vw, 38px);
+  }
+
+  .works-intro__of {
+    right: 0;
+    top: 7%;
+  }
+
+  .works-intro__my {
+    left: 4%;
+    top: 36%;
+  }
+
+  .works-collection {
+    padding: clamp(76px, 18vw, 110px) var(--gutter);
+  }
+
+  .work-card-row {
+    display: grid;
+  }
+
+  .work-card,
+  .work-card-row:has(.work-card:hover) .work-card,
+  .work-card-row:has(.work-card:hover) .work-card:hover {
+    flex-grow: 1;
+    opacity: 1;
+    filter: none;
+  }
+
+  .work-card {
+    min-height: 390px;
+  }
+
+  .work-card__content-inner {
+    transform: translateY(84px);
+  }
+
+  .work-card__top {
+    gap: 16px;
+  }
+
+  .work-card__title {
+    font-size: clamp(26px, 8vw, 36px);
+  }
+}

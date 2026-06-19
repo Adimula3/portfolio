@@ -1,0 +1,813 @@
+/* ============================================================
+   about.module.css — About page styles
+   Source: victorfuruya.md — exact CSS values
+   ============================================================ */
+
+/* ─── BEHIND / THE / SCREEN PRELOADER ───────────────────────── */
+/* Source: victorfuruya.md — Section 9 Outro Bridge            */
+
+/* Full-screen dark wrapper */
+.carveWrapper {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0f0f0f;
+  z-index: 3000;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Flex row: [Behind] [card] [Screen] */
+.carveContent {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  gap: clamp(1rem, 3vw, 3rem);
+  z-index: 1;
+}
+
+.carveSideLeft {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.carveSideRight {
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* "Behind" and "Screen" labels */
+.carveText {
+  font-family: "Satoshi", sans-serif;
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.05em;
+  margin: 0;
+}
+
+/* Centre card — same proportions as victorfuruya hero card */
+.carveCard {
+  position: relative;
+  width: clamp(180px, 22vw, 368px);
+  aspect-ratio: 368 / 527;
+  background: #1a1a1a;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carveVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.carveVideoShade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.14), rgba(0, 0, 0, 0.44)),
+    radial-gradient(circle at 50% 44%, rgba(255, 255, 255, 0.1), transparent 48%);
+}
+
+/* "Into" text overlay on the card */
+.carveInto {
+  position: relative;
+  z-index: 2;
+  font-family: "Satoshi", sans-serif;
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.05em;
+  margin: 0;
+}
+
+/* Full-screen expansion overlay — clip-path animated from card bounds → full */
+.carveExpand {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1px;
+  height: 1px;
+  background: #1a1a1a;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.carveExpandShade {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.08), transparent 42%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.54));
+}
+
+/* ─── ABOUT PRELOADER ───────────────────────────────────────── */
+.aboutPreloader {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #fff;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  container-type: inline-size;
+}
+
+.preloaderCounter h1 {
+  font-family: "Satoshi", sans-serif;
+  font-size: clamp(3.5rem, 38cqi, 6rem);
+  font-weight: 600;
+  color: #2f2f2f;
+  line-height: 1;
+  margin: 0;
+}
+
+.preloaderProgressBar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 3.5px;
+  background-color: rgba(47, 47, 47, 0.2);
+}
+
+.preloaderProgress {
+  width: 100%;
+  height: 100%;
+  background-color: #2f2f2f;
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+/* ─── HERO IMAGE (fixed dark placeholder) ───────────────────── */
+.heroImage {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #1a1a1a;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.aboutHeroVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.aboutHeroVideoShade {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 52% 36%, rgba(255, 255, 255, 0.06), transparent 42%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.26), rgba(0, 0, 0, 0.62));
+}
+
+/* ─── DARK OVERLAY (appears on scroll) ─────────────────────── */
+.heroOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.56);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ─── ABOUT SECTION (main scroll wrapper) ───────────────────── */
+.aboutSection {
+  position: relative;
+  width: 100%;
+  z-index: 2;
+  background: transparent;
+}
+
+.aboutSpacer {
+  height: 30vh;
+}
+
+/* ─── ABOUT CONTENT — two-column ────────────────────────────── */
+.aboutContent {
+  width: 100%;
+  min-height: 160vh;
+  display: flex;
+  padding: 0 4%;
+  color: #fff;
+}
+
+.aboutCol {
+  display: flex;
+  flex-direction: column;
+}
+
+.aboutColLeft {
+  flex: 0 0 47%;
+  justify-content: flex-end;
+  align-items: flex-end;
+  padding-bottom: 6%;
+}
+
+.aboutColRight {
+  flex: 0 0 53%;
+  padding-top: 30vh;
+}
+
+/* ─── INFO BLOCKS ────────────────────────────────────────────── */
+/* fluid left offset: 30% at 850px viewport → 47% at 1920px */
+.infoBlock {
+  position: relative;
+  left: clamp(
+    30%,
+    calc(30% + (47% - 30%) * ((100vw - 850px) / (1920 - 850))),
+    47%
+  );
+  width: 84%;
+}
+
+.infoBlockBridge {
+  margin-top: 8vh;
+}
+
+/* ─── LABELS ─────────────────────────────────────────────────── */
+.labelWhoAmI {
+  display: inline-block;
+  font-family: "Satoshi", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  width: 90px;
+  margin-right: 0.5rem;
+  vertical-align: baseline;
+  transform: translateY(-0.2em);
+}
+
+.labelAbout {
+  display: inline-block;
+  font-family: "Satoshi", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  width: 135px;
+  margin-right: 0.5rem;
+  vertical-align: baseline;
+  transform: translateY(-0.2em);
+}
+
+/* ─── ABOUT DESCRIPTION ──────────────────────────────────────── */
+.aboutDescription {
+  font-family: "Satoshi", sans-serif;
+  font-size: 2.2rem;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.05em;
+  color: #fff;
+  margin: 0;
+}
+
+/* ─── SPOTLIGHT / SKILLS ─────────────────────────────────────── */
+.spotlight {
+  position: relative;
+  width: 100vw;
+  height: 100svh;
+  background-color: #000;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.spotlightLabel {
+  position: absolute;
+  top: clamp(1.5rem, 3vh, 3rem);
+  left: clamp(1.5rem, 4%, 4rem);
+  font-family: "Satoshi", sans-serif;
+  color: #939393;
+  font-size: 16px;
+  letter-spacing: -0.02em;
+  font-weight: 500;
+  margin: 0;
+}
+
+.spotlightTitles {
+  position: relative;
+  left: 46vw;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.25rem, 1vh, 0.5rem);
+}
+
+.spotlightTitle {
+  font-family: "Satoshi", sans-serif;
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 700;
+  color: #fff;
+  opacity: 0;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: default;
+  transition: opacity 0.3s ease;
+  margin: 0;
+}
+
+.spotlightTitle:hover {
+  opacity: 1;
+}
+
+/* Image placeholder — reveals from top on hover */
+.spotlightImg {
+  position: absolute;
+  top: 50%;
+  left: 30vw;
+  transform: translate(-50%, -50%);
+  width: clamp(200px, 25vw, 400px);
+  aspect-ratio: 270 / 153;
+  background: #333333;
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 0.6s cubic-bezier(0.76, 0, 0.24, 1);
+  pointer-events: none;
+}
+
+.spotlightImgActive {
+  clip-path: inset(0 0 0 0);
+}
+
+/* ─── CORE VALUES ────────────────────────────────────────────── */
+.coreValues {
+  position: relative;
+  width: 100vw;
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: 46vw 1fr;
+  background: transparent;
+  color: #fff;
+  padding: 15vh 0;
+}
+
+.coreValuesPinnedWrapper {
+  height: 100%;
+}
+
+.coreValuesPinned {
+  position: sticky;
+  top: 40vh;
+  padding-left: 20vw;
+}
+
+.coreValuesLabel {
+  font-family: "Satoshi", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #fff;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.5rem;
+}
+
+.coreTitleMain {
+  font-family: "Satoshi", sans-serif;
+  font-size: clamp(4rem, 8vw, 12rem);
+  font-weight: 700;
+  color: #939393;
+  letter-spacing: -0.05em;
+  line-height: 0.8;
+  margin: 0;
+}
+
+.coreValuesList {
+  width: 40vw;
+  font-family: "Satoshi", sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 15vh;
+  padding: 10vh 0;
+}
+
+.coreValueItem {
+  font-size: clamp(2rem, 3vw, 4rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.05em;
+  color: #fff;
+  opacity: 0;
+  margin: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* ─── MOBILE ≤850px ──────────────────────────────────────────── */
+@media (max-width: 850px) {
+  .aboutContent {
+    flex-direction: column;
+    min-height: auto;
+    padding: 1.5rem;
+    gap: 4rem;
+  }
+
+  .aboutColLeft {
+    display: none;
+  }
+
+  .aboutColRight {
+    flex: 1;
+    padding-top: 5vh;
+  }
+
+  .infoBlock {
+    position: static;
+    width: 100%;
+  }
+
+  .collapseText {
+    font-size: 3.3rem;
+  }
+
+  .spotlightTitles {
+    left: 0;
+    padding: 0 1.5rem;
+  }
+
+  .coreValues {
+    grid-template-columns: 1fr;
+    padding: 5vh 1.5rem;
+  }
+
+  .coreValuesPinnedWrapper {
+    display: none;
+  }
+
+  .coreValuesList {
+    width: 100%;
+    padding: 5vh 0;
+    gap: 8vh;
+  }
+}
+
+/* ─── MOBILE ≤600px ──────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .aboutDescription {
+    font-size: 2rem;
+  }
+
+  .collapseText {
+    font-size: clamp(2rem, 10vw, 2.5rem);
+    letter-spacing: -0.1rem;
+  }
+}
+
+/* ─── PHASE 1 — parallax text section ───────────────────────── */
+/* Height = scroll distance for Phase 1. Text exits viewport at ~50vh
+   (1.8× speed × 30vh start offset), so 60vh keeps the gap tiny. */
+.p1Section {
+  position: relative;
+  height: 60vh;
+  z-index: 2;
+}
+
+.p1Content {
+  width: 100%;
+  display: flex;
+  padding: 0 4%;
+  color: #fff;
+}
+
+/* ─── PHASE 2-4 — scroll spacer for panel animation ─────────── */
+.p2Section {
+  position: relative;
+  height: 300vh;
+  z-index: 2;
+}
+
+/* ─── PANELS — grow from all 4 edges ────────────────────────── */
+.panel {
+  position: fixed;
+  background: #000;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.panelLeft {
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100vh;
+}
+
+.panelRight {
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 100vh;
+}
+
+.panelTop {
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 0;
+}
+
+.panelBottom {
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 0;
+}
+
+/* ─── "SKETCH IT" / "INTO SYSTEMS" — black-band text ────────── */
+
+/* Wrappers carry the fixed positioning; GSAP keeps them outside the video edge */
+.makeItWrapper {
+  position: fixed;
+  top: 55%;
+  right: 50%;
+  padding-right: 0.18em;
+  transform: translateY(-50%);
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0;
+  /* contain the curtain overlay */
+  overflow: hidden;
+}
+
+.matterWrapper {
+  position: fixed;
+  top: 55%;
+  left: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0;
+  overflow: hidden;
+}
+
+/* Text — pure typography, no positioning */
+.makeItText,
+.matterText {
+  font-family: "Satoshi", sans-serif;
+  font-size: clamp(3rem, 5vw, 5rem);
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  color: #fff;
+  white-space: nowrap;
+  margin: 0;
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+/* Curtain — sits on top of the text, sweeps left→right via scaleX 0→1 */
+.textCurtain {
+  position: absolute;
+  inset: 0;
+  background: #000;        /* matches body bg / the black revealed as iris closes */
+  transform: scaleX(0);
+  transform-origin: left;
+  z-index: 2;
+}
+
+/* ─── PHASE 5 — sequential text reveal ──────────────────────── */
+/* No new background — sits on the same #000 from the iris close.  */
+/* Each item overflows hidden so text "rises up into view" on entry. */
+
+.p5Container {
+  position: relative;
+  z-index: 30;
+  isolation: isolate;
+  padding: 22vh clamp(1.5rem, 8%, 8rem) 20vh;
+}
+
+.focusSketchLayer {
+  position: fixed;
+  inset: 0;
+  height: 100vh;
+  width: 100vw;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  will-change: opacity;
+}
+
+.focusSketchVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: contrast(1.05) saturate(0.82);
+  transform: scale(1.06);
+}
+
+.focusSketchShade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.92), rgba(0, 0, 0, 0.56) 46%, rgba(0, 0, 0, 0.9)),
+    radial-gradient(circle at 70% 42%, rgba(255, 255, 255, 0.1), transparent 38%);
+}
+
+/* Label row */
+.p5LabelWrap {
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+  margin-bottom: 7vh;
+}
+
+.p5Label {
+  font-family: "Satoshi", sans-serif;
+  color: #939393;
+  font-size: 16px;
+  letter-spacing: -0.02em;
+  font-weight: 500;
+  margin: 0;
+  transform: translateY(100%);
+}
+
+/* Each skill item row */
+.p5ItemWrap {
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+  margin-bottom: 3.5vh;
+}
+
+.skillTitle {
+  font-family: "Satoshi", sans-serif;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 700;
+  color: #939393;   /* dim by default; GSAP sets #fff when item is in focus */
+  letter-spacing: -0.05em;
+  line-height: 1;
+  margin: 0;
+  transform: translateY(100%);
+}
+
+/* ─── PHASE 6 — Cut 05 closing contact sequence ─────────────── */
+.closingSection {
+  position: relative;
+  z-index: 35;
+  height: 420vh;
+  background: transparent;
+  color: #fff;
+}
+
+.closingPin {
+  position: fixed;
+  inset: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: #050403;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  z-index: 45;
+}
+
+.closingVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  will-change: opacity, transform, filter;
+}
+
+.closingShade {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.1), transparent 34%),
+    linear-gradient(90deg, rgba(5, 4, 3, 0.92), rgba(5, 4, 3, 0.5) 52%, rgba(5, 4, 3, 0.92)),
+    linear-gradient(180deg, rgba(5, 4, 3, 0.16), rgba(5, 4, 3, 0.9));
+  pointer-events: none;
+}
+
+.closingStatements {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1.5rem, 5vw, 5rem);
+  pointer-events: none;
+}
+
+.closingStatement {
+  position: absolute;
+  max-width: min(1120px, 88vw);
+  overflow: visible;
+  text-align: center;
+  will-change: opacity, transform, filter;
+  perspective: 900px;
+}
+
+.closingStatementText {
+  position: relative;
+  z-index: 1;
+  font-family: "Satoshi", sans-serif;
+  font-size: clamp(2rem, 3.2vw, 3.4rem);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+  color: #fff;
+  margin: 0;
+  text-shadow:
+    0 0 24px rgba(255, 255, 255, 0.16),
+    0 18px 60px rgba(0, 0, 0, 0.5);
+}
+
+.closingWord {
+  display: inline-block;
+  white-space: nowrap;
+  transform-style: preserve-3d;
+}
+
+.closingChar {
+  display: inline-block;
+  will-change: transform, opacity, filter;
+  transform-style: preserve-3d;
+}
+
+.closingNav {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 4;
+  padding: clamp(1.2rem, 3vh, 2rem) clamp(1.25rem, 4vw, 4rem);
+  font-family: "Satoshi", sans-serif;
+  will-change: opacity, transform;
+  pointer-events: none;
+}
+
+.closingNavInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(1.25rem, 4vw, 4rem);
+}
+
+.closingLogo {
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.closingLinks {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.closingLink {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.closingLinkActive {
+  color: #fff;
+}
+
+.closingLink:hover {
+  color: #fff;
+}
+
+@media (max-width: 700px) {
+  .closingNavInner {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .closingLinks {
+    flex-wrap: wrap;
+  }
+
+  .closingStatementText {
+    font-size: clamp(2rem, 7.2vw, 3.1rem);
+  }
+}
