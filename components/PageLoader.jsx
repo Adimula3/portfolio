@@ -36,9 +36,9 @@ export default function PageLoader({ onComplete }) {
     // After black wipe finishes → expand to full screen
     const t1 = setTimeout(() => card.classList.add(styles.expanding), 1580);
 
-    // After expansion finishes → hide loader, fire callback
+    // After expansion finishes, let React swap the loader for the landing.
+    // Keeping the loader visible until that render avoids a one-frame gap.
     const t2 = setTimeout(() => {
-      wrapper.style.display = "none";
       if (onComplete) onComplete();
     }, 1990);
 
