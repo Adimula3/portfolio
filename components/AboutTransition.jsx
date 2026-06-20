@@ -6,7 +6,6 @@ import { CustomEase } from "gsap/CustomEase";
 import styles from "@/app/about/about.module.css";
 
 const ABOUT_SCENE_VIDEO = "/videos/about-scene-01.mp4";
-const ABOUT_SCENE_POSTER = "/video-posters/about-scene-01.jpg";
 
 export default function AboutTransition({ onComplete }) {
   const carveRef  = useRef(null);
@@ -124,10 +123,9 @@ export default function AboutTransition({ onComplete }) {
             ref={cardVideoRef}
             className={styles.carveVideo}
             src={ABOUT_SCENE_VIDEO}
-            poster={ABOUT_SCENE_POSTER}
             muted
             playsInline
-            preload="metadata"
+            preload="auto"
           />
           <div className={styles.carveVideoShade} aria-hidden="true" />
           <p ref={intoRef} className={styles.carveInto}>the</p>
@@ -145,10 +143,9 @@ export default function AboutTransition({ onComplete }) {
           ref={expandVideoRef}
           className={styles.carveVideo}
           src={ABOUT_SCENE_VIDEO}
-          poster={ABOUT_SCENE_POSTER}
           muted
           playsInline
-          preload="metadata"
+          preload="auto"
         />
         <div className={styles.carveExpandShade} />
       </div>
