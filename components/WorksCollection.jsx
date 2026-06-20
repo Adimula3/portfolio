@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
+
 const works = [
   {
     number: "01",
@@ -9,6 +11,7 @@ const works = [
     summary:
       "A storefront concept for browsing products, comparing details, and moving toward checkout with a clear buying rhythm.",
     media: "/videos/cut_01.mp4",
+    poster: "/video-posters/cut_01.jpg",
     tags: ["Product grid", "Cart flow", "Responsive UI"],
   },
   {
@@ -19,6 +22,7 @@ const works = [
     summary:
       "A public-facing site structure for explaining impact, guiding people through the mission, and making support feel simple.",
     media: "/videos/cut_02.mp4",
+    poster: "/video-posters/cut_02.jpg",
     tags: ["Story pages", "Donation CTA", "Content system"],
   },
   {
@@ -29,6 +33,7 @@ const works = [
     summary:
       "A visual travel experience for exploring places, scanning packages, and building desire before the external click.",
     media: "/videos/cut_03.mp4",
+    poster: "/video-posters/cut_03.jpg",
     tags: ["Destination cards", "Search UI", "Editorial flow"],
   },
   {
@@ -39,6 +44,7 @@ const works = [
     summary:
       "A launch-style product page built around drop energy, confident product framing, and fast detail discovery.",
     media: "/videos/cut_04.mp4",
+    poster: "/video-posters/cut_04.jpg",
     tags: ["Product reveal", "Motion", "Drop page"],
   },
   {
@@ -49,31 +55,52 @@ const works = [
     summary:
       "A looser frontend prototype for testing layout ideas, interaction moments, and expressive portfolio mechanics.",
     media: "/videos/cut_05.mp4",
+    poster: "/video-posters/cut_05.jpg",
     tags: ["Prototype", "Interaction", "Frontend"],
   },
 ];
 
-function WorkMedia({ work }) {
+function WorkMedia({ shouldLoad, work }) {
   return (
     <video
       className="work-card__media"
-      src={work.media}
-      autoPlay
+      src={shouldLoad ? work.media : undefined}
+      poster={work.poster}
+      autoPlay={shouldLoad}
       muted
       loop
       playsInline
-      preload="metadata"
+      preload={shouldLoad ? "metadata" : "none"}
     />
   );
 }
 
 export default function WorksCollection() {
+  const sectionRef = useRef(null);
+  const [shouldLoadVideos, setShouldLoadVideos] = useState(false);
   const rows = Array.from({ length: Math.ceil(works.length / 2) }, (_, rowIndex) =>
     works.slice(rowIndex * 2, rowIndex * 2 + 2)
   );
 
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section || shouldLoadVideos) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setShouldLoadVideos(true);
+        observer.disconnect();
+      },
+      { rootMargin: "0px", threshold: 0.08 }
+    );
+
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, [shouldLoadVideos]);
+
   return (
-    <section className="works-collection" aria-label="Recent work">
+    <section ref={sectionRef} className="works-collection" aria-label="Recent work">
       <div className="works-collection__grid">
         {rows.map((row, rowIndex) => (
           <div key={rowIndex} className="work-card-row">
@@ -82,7 +109,7 @@ export default function WorksCollection() {
 
               return (
                 <article key={work.title} className="work-card">
-                  <WorkMedia work={work} />
+                  <WorkMedia shouldLoad={shouldLoadVideos} work={work} />
                   <div className="work-card__shade" />
                   <div className="work-card__blur" />
 

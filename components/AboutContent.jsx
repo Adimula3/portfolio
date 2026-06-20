@@ -10,6 +10,9 @@ import styles from "@/app/about/about.module.css";
 const ABOUT_SCENE_VIDEO = "/videos/about-scene-01.mp4";
 const FOCUS_SKETCH_VIDEO = "/videos/focus-sketch-cut03.mp4";
 const CLOSING_VIDEO = "/videos/about-cut-05.mp4";
+const ABOUT_SCENE_POSTER = "/video-posters/about-scene-01.jpg";
+const FOCUS_SKETCH_POSTER = "/video-posters/focus-sketch-cut03.jpg";
+const CLOSING_POSTER = "/video-posters/about-cut-05.jpg";
 const EMAIL_LINK = "mailto:Kolawoleolayinka16@gmail.com";
 const LINKEDIN_LINK = "https://www.linkedin.com/in/olayinka-kolawole-84189a188/";
 const META_LINK = "https://wa.me/2349064819280";
@@ -144,7 +147,7 @@ export default function AboutContent() {
 
   useEffect(() => {
     const prevBg = document.body.style.background;
-    document.body.style.background = "#000";
+    document.body.style.background = "#050505";
 
     gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -656,10 +659,11 @@ export default function AboutContent() {
           ref={heroVideoRef}
           className={styles.aboutHeroVideo}
           src={ABOUT_SCENE_VIDEO}
+          poster={ABOUT_SCENE_POSTER}
           muted
           loop
           playsInline
-          preload="auto"
+          preload="metadata"
         />
         <div className={styles.aboutHeroVideoShade} />
       </div>
@@ -713,9 +717,10 @@ export default function AboutContent() {
             ref={focusSketchVideoRef}
             className={styles.focusSketchVideo}
             src={FOCUS_SKETCH_VIDEO}
+            poster={FOCUS_SKETCH_POSTER}
             muted
             playsInline
-            preload="auto"
+            preload="metadata"
           />
           <div className={styles.focusSketchShade} />
         </div>
@@ -740,9 +745,10 @@ export default function AboutContent() {
             ref={closingVideoRef}
             className={styles.closingVideo}
             src={CLOSING_VIDEO}
+            poster={CLOSING_POSTER}
             muted
             playsInline
-            preload="auto"
+            preload="metadata"
           />
           <div className={styles.closingShade} />
 
