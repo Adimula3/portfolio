@@ -811,3 +811,237 @@
     font-size: clamp(2rem, 7.2vw, 3.1rem);
   }
 }
+
+/* ─── RESPONSIVE POLISH — tablet/mobile about pass ───────────── */
+@media (max-width: 1024px) {
+  .carveContent {
+    padding: clamp(1rem, 3vw, 2rem);
+    gap: clamp(1rem, 3vw, 2.2rem);
+  }
+
+  .carveText,
+  .carveInto {
+    font-size: clamp(2rem, 5.6vw, 3.2rem);
+    line-height: 0.95;
+  }
+
+  .carveCard {
+    width: clamp(150px, 24vw, 270px);
+  }
+
+  .aboutContent {
+    min-height: 140vh;
+    padding: 0 clamp(1.5rem, 5vw, 3rem);
+  }
+
+  .aboutColLeft {
+    flex-basis: 38%;
+  }
+
+  .aboutColRight {
+    flex-basis: 62%;
+    padding-top: 22vh;
+  }
+
+  .infoBlock {
+    left: 0;
+    width: min(620px, 100%);
+  }
+
+  .aboutDescription {
+    font-size: clamp(1.45rem, 3.2vw, 2rem);
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+  }
+
+  .makeItWrapper,
+  .matterWrapper {
+    top: 54%;
+  }
+
+  .makeItText,
+  .matterText {
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    line-height: 0.95;
+  }
+
+  .p5Container {
+    padding: 18vh clamp(1.25rem, 6vw, 4rem) 18vh;
+  }
+
+  .skillTitle {
+    font-size: clamp(2.1rem, 7vw, 4.4rem);
+    line-height: 0.98;
+  }
+
+  .closingStatementText {
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    line-height: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .carveContent {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: clamp(0.55rem, 2.8vw, 1rem);
+    padding: 1rem;
+  }
+
+  .carveText,
+  .carveInto {
+    font-size: clamp(1.25rem, 6vw, 2rem);
+    letter-spacing: -0.035em;
+    white-space: nowrap;
+  }
+
+  .carveCard {
+    width: clamp(92px, 30vw, 140px);
+  }
+
+  .aboutContent {
+    min-height: 120vh;
+    flex-direction: column;
+    padding: 0 clamp(1rem, 5vw, 1.4rem);
+  }
+
+  .aboutColLeft {
+    display: none;
+  }
+
+  .aboutColRight {
+    flex: 1;
+    padding-top: 18vh;
+  }
+
+  .infoBlock {
+    position: static;
+    width: 100%;
+  }
+
+  .infoBlockBridge {
+    margin-top: 5vh;
+  }
+
+  .labelWhoAmI,
+  .labelAbout {
+    display: block;
+    width: auto;
+    margin: 0 0 0.65rem;
+    font-size: 12px;
+    color: #b8b8b8;
+    transform: none;
+  }
+
+  .aboutDescription {
+    font-size: clamp(1.18rem, 5.6vw, 1.65rem);
+    line-height: 1.12;
+    letter-spacing: -0.025em;
+  }
+
+  .makeItWrapper {
+    top: 50%;
+    right: 50%;
+  }
+
+  .matterWrapper {
+    top: 50%;
+    left: 50%;
+  }
+
+  .makeItText,
+  .matterText {
+    font-size: clamp(1.45rem, 8vw, 2.4rem);
+    letter-spacing: -0.035em;
+  }
+
+  .p5Container {
+    padding: 18vh clamp(1rem, 5vw, 1.4rem) 16vh;
+  }
+
+  .p5LabelWrap {
+    margin-bottom: 5vh;
+  }
+
+  .p5Label {
+    font-size: 13px;
+  }
+
+  .p5ItemWrap {
+    margin-bottom: 2.4vh;
+  }
+
+  .skillTitle {
+    font-size: clamp(1.8rem, 10vw, 3rem);
+    line-height: 1;
+    letter-spacing: -0.035em;
+  }
+
+  .closingStatements {
+    align-items: center;
+    padding: clamp(1rem, 6vw, 1.8rem);
+  }
+
+  .closingStatement {
+    max-width: min(520px, 86vw);
+  }
+
+  .closingStatementText {
+    font-size: clamp(1.45rem, 8vw, 2.45rem);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+  }
+
+  .closingNav {
+    padding: 1rem clamp(1rem, 5vw, 1.4rem);
+  }
+
+  .closingLogo {
+    font-size: 13px;
+  }
+
+  .closingLinks {
+    gap: 10px 16px;
+  }
+
+  .closingLink {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 420px) {
+  .carveContent {
+    gap: 0.55rem;
+  }
+
+  .carveText,
+  .carveInto {
+    font-size: clamp(1.05rem, 5.2vw, 1.45rem);
+  }
+
+  .carveCard {
+    width: clamp(82px, 28vw, 112px);
+  }
+
+  .aboutColRight {
+    padding-top: 16vh;
+  }
+
+  .aboutDescription {
+    font-size: clamp(1.05rem, 5vw, 1.38rem);
+    line-height: 1.16;
+  }
+
+  .makeItText,
+  .matterText {
+    font-size: clamp(1.18rem, 7vw, 1.8rem);
+  }
+
+  .skillTitle {
+    font-size: clamp(1.55rem, 9vw, 2.35rem);
+  }
+
+  .closingStatementText {
+    font-size: clamp(1.25rem, 7.4vw, 2rem);
+  }
+}
