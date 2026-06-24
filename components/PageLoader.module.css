@@ -42,3 +42,10 @@
   from { clip-path: inset(100% 0 0 0); }
   to   { clip-path: inset(0%   0 0 0); }
 }
+
+/* Reduced motion: no colour wipe or scale — show the plain dark card, then the
+   component hands off after a short delay. */
+@media (prefers-reduced-motion: reduce) {
+  .panel { animation: none; clip-path: inset(0 0 0 0); }
+  .card  { transition: none; }
+}

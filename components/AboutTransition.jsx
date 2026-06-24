@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
 import styles from "@/app/about/about.module.css";
+import { prefersReducedMotion } from "./animationUtils";
 
 const ABOUT_SCENE_VIDEO = "/videos/about-scene-01.mp4";
 
@@ -17,6 +18,12 @@ export default function AboutTransition({ onComplete }) {
   const expandVideoRef = useRef(null);
 
   useEffect(() => {
+    // Reduced motion: skip the carve reveal and go straight to the content.
+    if (prefersReducedMotion()) {
+      const t = setTimeout(() => onComplete && onComplete(), 60);
+      return () => clearTimeout(t);
+    }
+
     gsap.registerPlugin(CustomEase);
     // Same "hop" ease as victorfuruya.com card→fullscreen reveal
     CustomEase.create("hop", "0.9, 0, 0.1, 1");
@@ -125,7 +132,7 @@ export default function AboutTransition({ onComplete }) {
             src={ABOUT_SCENE_VIDEO}
             muted
             playsInline
-            preload="auto"
+            preload="metadata"
           />
           <div className={styles.carveVideoShade} aria-hidden="true" />
           <p ref={intoRef} className={styles.carveInto}>the</p>
@@ -145,7 +152,7 @@ export default function AboutTransition({ onComplete }) {
           src={ABOUT_SCENE_VIDEO}
           muted
           playsInline
-          preload="auto"
+          preload="metadata"
         />
         <div className={styles.carveExpandShade} />
       </div>

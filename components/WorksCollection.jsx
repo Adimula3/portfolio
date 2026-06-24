@@ -1,15 +1,19 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+import { prefersReducedMotion } from "./animationUtils";
+
 const works = [
   {
     number: "01",
-    title: "E-Commerce Store",
-    type: "Shopping / Product / Checkout",
+    title: "Helpers Academic",
+    type: "Academic / Coaching / Support",
     year: "2026",
     summary:
-      "A storefront concept for browsing products, comparing details, and moving toward checkout with a clear buying rhythm.",
-    media: "/videos/cut_01.mp4",
-    tags: ["Product grid", "Cart flow", "Responsive UI"],
+      "A live academic support platform where students get an instant quote, browse subject-specialist services, and move from brief to delivery through a clear, guided flow.",
+    media: "/videos/helpers.mp4",
+    link: "https://helpers-academic.vercel.app/",
+    tags: ["Instant quote", "Service flow", "Responsive UI"],
   },
   {
     number: "02",
@@ -53,16 +57,60 @@ const works = [
   },
 ];
 
+// Videos are not loaded or played up front. An IntersectionObserver starts a
+// clip only when its card scrolls into view (and pauses it when it leaves), so
+// the five cards never download/decode at once and compete with first paint.
 function WorkMedia({ work }) {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const reduced = prefersReducedMotion();
+
+    const load = () => {
+      if (video.preload !== "auto") {
+        video.preload = "auto";
+        video.load();
+      }
+    };
+
+    // No IntersectionObserver support → just load + play so nothing is missing.
+    if (typeof IntersectionObserver === "undefined") {
+      load();
+      if (!reduced) video.play().catch(() => {});
+      return;
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            load();
+            // Reduced motion: load the first frame but don't autoplay the loop.
+            if (!reduced) video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        });
+      },
+      { threshold: 0.25, rootMargin: "200px 0px" }
+    );
+
+    io.observe(video);
+    return () => io.disconnect();
+  }, []);
+
   return (
     <video
+      ref={videoRef}
       className="work-card__media"
       src={work.media}
-      autoPlay
       muted
       loop
       playsInline
-      preload="metadata"
+      preload="none"
     />
   );
 }
@@ -99,9 +147,12 @@ export default function WorksCollection() {
                         </div>
 
                         <a
-                          href="#"
+                          href={work.link || "#"}
                           className="work-card__arrow"
                           aria-label={`Open ${work.title}`}
+                          {...(work.link
+                            ? { target: "_blank", rel: "noopener noreferrer" }
+                            : {})}
                         >
                           <span aria-hidden="true">↗</span>
                         </a>

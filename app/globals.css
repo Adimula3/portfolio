@@ -1406,3 +1406,29 @@ body {
     max-width: 270px;
   }
 }
+
+/* ─── Reduced motion ──────────────────────────────────────────────
+   The hero is hidden by default and revealed by GSAP. When motion is
+   reduced we never run that entrance, so force the content visible and
+   fall back to native scrolling. JS skips Lenis + video autoplay to match. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .landing__first,
+  .landing__last,
+  .landing__tag-line,
+  .landing .available-pill,
+  .landing .roll-link,
+  .works-intro {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Calm the per-letter hover roll into a simple, quick fade. */
+  .roll-letter {
+    transition-duration: 0.12s !important;
+    transition-delay: 0s !important;
+  }
+}

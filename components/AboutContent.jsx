@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import Lenis from "lenis";
 import styles from "@/app/about/about.module.css";
+import { onPageReady, prefersReducedMotion } from "./animationUtils";
 
 const ABOUT_SCENE_VIDEO = "/videos/about-scene-01.mp4";
 const FOCUS_SKETCH_VIDEO = "/videos/focus-sketch-cut03.mp4";
@@ -146,21 +147,47 @@ export default function AboutContent() {
     const prevBg = document.body.style.background;
     document.body.style.background = "#000";
 
-    gsap.registerPlugin(ScrollTrigger, SplitText);
+    const reduced = prefersReducedMotion();
+    let cancelled = false;
+    let cleanup = () => {};
 
-    const lenis = new Lenis({
-      duration:        1.2,
-      easing:          (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel:     true,
-      wheelMultiplier: 1,
-      touchMultiplier: 0.9,
-      syncTouch:       true,
+    // Boot the scroll/animation system after window.load so it never blocks
+    // first paint. On client-side navigation load has already fired, so this
+    // runs on the next frame.
+    const stopReady = onPageReady(() => {
+      if (cancelled) return;
+      cleanup = init();
     });
 
-    lenis.on("scroll", ScrollTrigger.update);
+    return () => {
+      cancelled = true;
+      stopReady();
+      cleanup();
+      document.body.style.background = prevBg;
+    };
+
+    function init() {
+    gsap.registerPlugin(ScrollTrigger, SplitText);
+
+    // Reduced motion: skip Lenis smooth-scroll inertia and use native scroll.
+    // ScrollTrigger drives the reveals off native scroll just the same.
+    const lenis = reduced
+      ? null
+      : new Lenis({
+          duration:        1.2,
+          easing:          (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          smoothWheel:     true,
+          wheelMultiplier: 1,
+          touchMultiplier: 0.9,
+          syncTouch:       true,
+        });
+
     const lenisTickFn = (time) => lenis.raf(time * 1000);
-    gsap.ticker.add(lenisTickFn);
-    gsap.ticker.lagSmoothing(0);
+    if (lenis) {
+      lenis.on("scroll", ScrollTrigger.update);
+      gsap.ticker.add(lenisTickFn);
+      gsap.ticker.lagSmoothing(0);
+    }
 
     const heroVideo = heroVideoRef.current;
     const focusSketchLayer = focusSketchLayerRef.current;
@@ -215,7 +242,8 @@ export default function AboutContent() {
       });
     };
 
-    if (heroVideo) {
+    // Reduced motion: leave the hero on its first frame (no scroll-driven play).
+    if (heroVideo && !reduced) {
       if (heroVideo.readyState >= 1) {
         wireHeroVideoMotion();
       } else {
@@ -620,7 +648,6 @@ export default function AboutContent() {
 
     return () => {
       mounted = false;
-      document.body.style.background = prevBg;
       clearTimeout(pauseHeroVideoTimeout);
       if (focusSketchRaf) cancelAnimationFrame(focusSketchRaf);
       if (closingVideoRaf) cancelAnimationFrame(closingVideoRaf);
@@ -633,9 +660,12 @@ export default function AboutContent() {
       closingTimeline?.kill();
       closingVideoTrigger?.kill();
       ScrollTrigger.getAll().forEach((t) => t.kill());
-      gsap.ticker.remove(lenisTickFn);
-      lenis.destroy();
+      if (lenis) {
+        gsap.ticker.remove(lenisTickFn);
+        lenis.destroy();
+      }
     };
+    } // end init
   }, []);
 
   return (
@@ -659,7 +689,7 @@ export default function AboutContent() {
           muted
           loop
           playsInline
-          preload="auto"
+          preload="metadata"
         />
         <div className={styles.aboutHeroVideoShade} />
       </div>
@@ -715,7 +745,7 @@ export default function AboutContent() {
             src={FOCUS_SKETCH_VIDEO}
             muted
             playsInline
-            preload="auto"
+            preload="metadata"
           />
           <div className={styles.focusSketchShade} />
         </div>
@@ -742,7 +772,7 @@ export default function AboutContent() {
             src={CLOSING_VIDEO}
             muted
             playsInline
-            preload="auto"
+            preload="metadata"
           />
           <div className={styles.closingShade} />
 

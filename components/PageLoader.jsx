@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import styles from "./PageLoader.module.css";
+import { prefersReducedMotion, prefetchAnimationEngine } from "./animationUtils";
 
 // 7 vivid colors + final black
 const COLORS = [
@@ -29,6 +30,16 @@ export default function PageLoader({ onComplete }) {
     const wrapper = wrapperRef.current;
     if (!card || !wrapper) return;
 
+    // Reduced motion: skip the colour wipe entirely, hand off almost at once.
+    if (prefersReducedMotion()) {
+      const t = setTimeout(() => onComplete && onComplete(), 250);
+      return () => clearTimeout(t);
+    }
+
+    // Warm the animation-engine chunk while the loader plays, so the landing's
+    // entrance fires instantly the moment we hand off.
+    prefetchAnimationEngine();
+
     // Scale factors so the card covers 100vw × 100vh exactly
     card.style.setProperty("--sx", window.innerWidth  / 300);
     card.style.setProperty("--sy", window.innerHeight / 400);
@@ -36,11 +47,15 @@ export default function PageLoader({ onComplete }) {
     // After black wipe finishes → expand to full screen
     const t1 = setTimeout(() => card.classList.add(styles.expanding), 1580);
 
-    // After expansion finishes, let React swap the loader for the landing.
-    // Keeping the loader visible until that render avoids a one-frame gap.
-    const t2 = setTimeout(() => {
-      if (onComplete) onComplete();
-    }, 1990);
+    // Hand off after the expansion finishes — but also wait for fonts so the
+    // landing text can't reflow the instant it appears. fonts.ready usually
+    // resolves long before 1990ms, so this only adds time in the worst case.
+    let t2;
+    const handoff = () => {
+      const fontsReady = document.fonts ? document.fonts.ready : Promise.resolve();
+      fontsReady.finally(() => onComplete && onComplete());
+    };
+    t2 = setTimeout(handoff, 1990);
 
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, [onComplete]);
