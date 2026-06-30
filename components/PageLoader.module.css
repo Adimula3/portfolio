@@ -38,6 +38,43 @@
   animation: wipeUp 180ms cubic-bezier(0.76, 0, 0.24, 1) forwards;
 }
 
+.heroPanel {
+  background: var(--color-bg);
+}
+
+.heroPreview {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100vw;
+  height: 100vh;
+  min-height: 100svh;
+  padding: clamp(12px, 1.5vw, 24px) var(--gutter) var(--gutter);
+  background: var(--color-bg);
+  color: var(--color-text);
+  overflow: hidden;
+  transform: translate(-50%, -50%) scale(var(--preview-sx), var(--preview-sy));
+  transform-origin: center center;
+}
+
+.heroPreview :global(.landing__content) {
+  height: 100%;
+}
+
+.heroPreview :global(.landing__first),
+.heroPreview :global(.landing__last),
+.heroPreview :global(.landing__tag-line),
+.heroPreview :global(.available-pill),
+.heroPreview :global(.roll-link) {
+  opacity: 1;
+  transform: none;
+}
+
+.heroPreview :global(.roll-link) {
+  line-height: 1;
+  pointer-events: none;
+}
+
 @keyframes wipeUp {
   from { clip-path: inset(100% 0 0 0); }
   to   { clip-path: inset(0%   0 0 0); }

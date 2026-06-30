@@ -15,15 +15,11 @@ export default function App() {
         <PageLoader onComplete={() => setReady(true)} />
       )}
 
-      {ready && (
-        <>
-          <Navbar />
-          <main>
-            <Landing />
-            <WorksCollection />
-          </main>
-        </>
-      )}
+      <Navbar />
+      <main>
+        <Landing />
+        <WorksCollection />
+      </main>
     </>
   );
 }

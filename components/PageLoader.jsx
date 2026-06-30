@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import styles from "./PageLoader.module.css";
 import { prefersReducedMotion, prefetchAnimationEngine } from "./animationUtils";
 
-// 7 vivid colors + final black
+// 7 vivid colors, then a scaled preview of the real landing hero.
 const COLORS = [
   "#FF3B3B",
   "#FF8C00",
@@ -13,12 +13,11 @@ const COLORS = [
   "#00B0FF",
   "#AA00FF",
   "#FF006E",
-  "#050505",
 ];
 
 // Timing breakdown (all under 2 s):
 //   Panels 0-6 wipe:  7 × 200 ms = 1 400 ms
-//   Panel 7 (black):  starts 1 400 ms, ends 1 580 ms
+//   Panel 7 (hero):   starts 1 400 ms, ends 1 580 ms
 //   Expansion:        starts 1 580 ms, ends 1 980 ms
 
 export default function PageLoader({ onComplete }) {
@@ -41,10 +40,14 @@ export default function PageLoader({ onComplete }) {
     prefetchAnimationEngine();
 
     // Scale factors so the card covers 100vw × 100vh exactly
-    card.style.setProperty("--sx", window.innerWidth  / 300);
-    card.style.setProperty("--sy", window.innerHeight / 400);
+    const sx = window.innerWidth / 300;
+    const sy = window.innerHeight / 400;
+    card.style.setProperty("--sx", sx);
+    card.style.setProperty("--sy", sy);
+    card.style.setProperty("--preview-sx", 1 / sx);
+    card.style.setProperty("--preview-sy", 1 / sy);
 
-    // After black wipe finishes → expand to full screen
+    // After the hero-image wipe finishes, expand to full screen.
     const t1 = setTimeout(() => card.classList.add(styles.expanding), 1580);
 
     // Hand off after the expansion finishes — but also wait for fonts so the
@@ -73,6 +76,41 @@ export default function PageLoader({ onComplete }) {
             }}
           />
         ))}
+        <div
+          className={`${styles.panel} ${styles.heroPanel}`}
+          style={{ animationDelay: `${COLORS.length * 200}ms` }}
+        >
+          <div className={styles.heroPreview} aria-hidden="true">
+            <div className="landing__content">
+              <div className="landing__left">
+                <h1 className="landing__first">YINKA</h1>
+                <p className="landing__tagline">
+                  <span className="landing__tag-line">CREATIVE FRONT-END DEVELOPER</span>
+                  <span className="landing__tag-line">BUILDING UNIQUE DIGITAL EXPERIENCES</span>
+                  <span className="landing__tag-line">ONE PIXEL AT A TIME</span>
+                </p>
+              </div>
+
+              <div className="landing__right">
+                <div className="landing__right-group">
+                  <h1 className="landing__last">KOLAWOLE</h1>
+                  <div className="landing__right-info">
+                    <span className="available-pill">
+                      AVAILABLE
+                      <span className="available-pill__dot" />
+                    </span>
+                    <nav className="landing__nav">
+                      <span className="roll-link">About</span>
+                      <span className="roll-link">Email</span>
+                      <span className="roll-link">in</span>
+                      <span className="roll-link">Meta</span>
+                    </nav>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
