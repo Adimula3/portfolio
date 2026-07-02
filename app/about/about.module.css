@@ -13,7 +13,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #0f0f0f;
+  background: #050505;
   z-index: 3000;
   pointer-events: none;
   overflow: hidden;
@@ -45,10 +45,10 @@
 
 /* "Behind" and "Screen" labels */
 .carveText {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--font-primary);
   font-size: clamp(2.5rem, 5vw, 3.5rem);
   font-weight: 700;
-  color: #fff;
+  color: var(--color-text);
   letter-spacing: -0.05em;
   margin: 0;
 }
@@ -58,7 +58,7 @@
   position: relative;
   width: clamp(180px, 22vw, 368px);
   aspect-ratio: 368 / 527;
-  background: #1a1a1a;
+  background: #050505;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -86,10 +86,10 @@
 .carveInto {
   position: relative;
   z-index: 2;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--font-primary);
   font-size: clamp(2.5rem, 5vw, 3.5rem);
   font-weight: 700;
-  color: #fff;
+  color: var(--color-text);
   letter-spacing: -0.05em;
   margin: 0;
 }
@@ -101,7 +101,7 @@
   left: 50%;
   width: 1px;
   height: 1px;
-  background: #1a1a1a;
+  background: #050505;
   z-index: 2;
   overflow: hidden;
 }
@@ -130,7 +130,7 @@
 }
 
 .preloaderCounter h1 {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--font-primary);
   font-size: clamp(3.5rem, 38cqi, 6rem);
   font-weight: 600;
   color: #2f2f2f;
@@ -162,7 +162,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: #1a1a1a;
+  background: #050505;
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
@@ -214,7 +214,7 @@
   min-height: 160vh;
   display: flex;
   padding: 0 4%;
-  color: #fff;
+  color: var(--color-text);
 }
 
 .aboutCol {
@@ -253,7 +253,7 @@
 /* ─── LABELS ─────────────────────────────────────────────────── */
 .labelWhoAmI {
   display: inline-block;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--font-primary);
   font-size: 15px;
   font-weight: 500;
   width: 90px;
@@ -264,7 +264,7 @@
 
 .labelAbout {
   display: inline-block;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--font-primary);
   font-size: 15px;
   font-weight: 500;
   width: 135px;
@@ -275,12 +275,12 @@
 
 /* ─── ABOUT DESCRIPTION ──────────────────────────────────────── */
 .aboutDescription {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--font-primary);
   font-size: 2.2rem;
   font-weight: 600;
   line-height: 1.05;
   letter-spacing: -0.05em;
-  color: #fff;
+  color: var(--color-text);
   margin: 0;
 }
 
@@ -289,7 +289,7 @@
   position: relative;
   width: 100vw;
   height: 100svh;
-  background-color: #000;
+  background-color: #050505;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -299,8 +299,8 @@
   position: absolute;
   top: clamp(1.5rem, 3vh, 3rem);
   left: clamp(1.5rem, 4%, 4rem);
-  font-family: "Satoshi", sans-serif;
-  color: #939393;
+  font-family: var(--font-primary);
+  color: var(--color-text-muted);
   font-size: 16px;
   letter-spacing: -0.02em;
   font-weight: 500;
@@ -316,10 +316,10 @@
 }
 
 .spotlightTitle {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--font-primary);
   font-size: clamp(2rem, 5vw, 4rem);
   font-weight: 700;
-  color: #fff;
+  color: var(--color-text);
   opacity: 0;
   letter-spacing: -0.05em;
   line-height: 1;
@@ -359,7 +359,7 @@
   display: grid;
   grid-template-columns: 46vw 1fr;
   background: transparent;
-  color: #fff;
+  color: var(--color-text);
   padding: 15vh 0;
 }
 
@@ -374,19 +374,19 @@
 }
 
 .coreValuesLabel {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--font-primary);
   font-size: 15px;
   font-weight: 500;
-  color: #fff;
+  color: var(--color-text);
   letter-spacing: -0.02em;
   margin: 0 0 0.5rem;
 }
 
 .coreTitleMain {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--font-primary);
   font-size: clamp(4rem, 8vw, 12rem);
   font-weight: 700;
-  color: #939393;
+  color: var(--color-text-muted);
   letter-spacing: -0.05em;
   line-height: 0.8;
   margin: 0;
@@ -394,7 +394,7 @@
 
 .coreValuesList {
   width: 40vw;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--font-primary);
   display: flex;
   flex-direction: column;
   gap: 15vh;
@@ -406,7 +406,7 @@
   font-weight: 700;
   line-height: 1.05;
   letter-spacing: -0.05em;
-  color: #fff;
+  color: var(--color-text);
   opacity: 0;
   margin: 0;
   transition: opacity 0.3s ease;
@@ -485,7 +485,7 @@
   width: 100%;
   display: flex;
   padding: 0 4%;
-  color: #fff;
+  color: var(--color-text);
 }
 
 /* ─── PHASE 2-4 — scroll spacer for panel animation ─────────── */
@@ -498,7 +498,7 @@
 /* ─── PANELS — grow from all 4 edges ────────────────────────── */
 .panel {
   position: fixed;
-  background: #000;
+  background: #050505;
   z-index: 10;
   pointer-events: none;
 }
@@ -561,11 +561,11 @@
 /* Text — pure typography, no positioning */
 .makeItText,
 .matterText {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--font-primary);
   font-size: clamp(3rem, 5vw, 5rem);
   font-weight: 700;
   letter-spacing: -0.05em;
-  color: #fff;
+  color: var(--color-text);
   white-space: nowrap;
   margin: 0;
   display: block;
@@ -577,7 +577,7 @@
 .textCurtain {
   position: absolute;
   inset: 0;
-  background: #000;        /* matches body bg / the black revealed as iris closes */
+  background: #050505;        /* matches body bg / the black revealed as iris closes */
   transform: scaleX(0);
   transform-origin: left;
   z-index: 2;
@@ -633,8 +633,8 @@
 }
 
 .p5Label {
-  font-family: "Satoshi", sans-serif;
-  color: #939393;
+  font-family: var(--font-primary);
+  color: var(--color-text-muted);
   font-size: 16px;
   letter-spacing: -0.02em;
   font-weight: 500;
@@ -651,10 +651,10 @@
 }
 
 .skillTitle {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--font-primary);
   font-size: clamp(2.5rem, 6vw, 5rem);
   font-weight: 700;
-  color: #939393;   /* dim by default; GSAP sets #fff when item is in focus */
+  color: var(--color-text-muted);   /* dim by default; GSAP sets #fff when item is in focus */
   letter-spacing: -0.05em;
   line-height: 1;
   margin: 0;
@@ -667,7 +667,7 @@
   z-index: 35;
   height: 420vh;
   background: transparent;
-  color: #fff;
+  color: var(--color-text);
 }
 
 .closingPin {
@@ -725,12 +725,12 @@
 .closingStatementText {
   position: relative;
   z-index: 1;
-  font-family: "Satoshi", sans-serif;
-  font-size: clamp(2rem, 3.2vw, 3.4rem);
+  font-family: var(--font-primary);
+  font-size: clamp(2.4rem, 4.4vw, 4.6rem);
   font-weight: 700;
   line-height: 0.98;
   letter-spacing: -0.04em;
-  color: #fff;
+  color: var(--color-text);
   margin: 0;
   text-shadow:
     0 0 24px rgba(255, 255, 255, 0.16),
@@ -756,7 +756,7 @@
   top: 0;
   z-index: 4;
   padding: clamp(1.2rem, 3vh, 2rem) clamp(1.25rem, 4vw, 4rem);
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--font-primary);
   will-change: opacity, transform;
   pointer-events: none;
 }
@@ -773,7 +773,7 @@
   font-weight: 900;
   letter-spacing: -0.02em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--color-text);
   text-decoration: none;
   white-space: nowrap;
 }
@@ -789,11 +789,11 @@
 }
 
 .closingLinkActive {
-  color: #fff;
+  color: var(--color-text);
 }
 
 .closingLink:hover {
-  color: #fff;
+  color: var(--color-text);
 }
 
 @media (max-width: 700px) {

@@ -26,16 +26,16 @@ const skills = [
 ];
 
 const closingStatements = [
-  "From rough ideas to working systems.",
-  "Let's build something that matters.",
+  "From idea to production.",
+  "Built end to end.",
   "Reach out",
 ];
 
 const closingNavLinks = [
   ["About", "/about"],
   ["Email", EMAIL_LINK],
-  ["in", LINKEDIN_LINK],
-  ["Meta", META_LINK],
+  ["LinkedIn", LINKEDIN_LINK],
+  ["WhatsApp", META_LINK],
 ];
 
 function ClosingRollLink({ href, label, active }) {
@@ -110,7 +110,7 @@ function splitIntoLines(paraEl) {
 
     const curtain = document.createElement("div");
     curtain.style.cssText =
-      "position:absolute;inset:0;background:#000;transform:scaleX(0);transform-origin:left;z-index:2;pointer-events:none;filter:url(#brush-rough);";
+      "position:absolute;inset:0;background:#050505;transform:scaleX(0);transform-origin:left;z-index:2;pointer-events:none;filter:url(#brush-rough);";
 
     lineWrap.appendChild(curtain);
     paraEl.appendChild(lineWrap);
@@ -145,7 +145,7 @@ export default function AboutContent() {
 
   useEffect(() => {
     const prevBg = document.body.style.background;
-    document.body.style.background = "#000";
+    document.body.style.background = "#050505";
 
     const reduced = prefersReducedMotion();
     let cancelled = false;
@@ -332,13 +332,13 @@ export default function AboutContent() {
 
       gsap.set(closingStatementRefs.current, { opacity: 0 });
       statementData.forEach(({ split }) => {
+        // Gentle rise-in: kept subtle so the words stay legible while moving.
         gsap.set(split.chars, {
           autoAlpha: 0,
-          yPercent: 112,
-          rotationX: -72,
-          rotationZ: -2,
-          scale: 0.86,
-          filter: "blur(10px)",
+          yPercent: 100,
+          rotationX: -40,
+          scale: 0.94,
+          filter: "blur(6px)",
           transformOrigin: "50% 70%",
         });
       });
@@ -373,14 +373,18 @@ export default function AboutContent() {
         );
 
       statementData.forEach(({ statement, split }, index) => {
-        const start = 0.26 + index * 0.22;
+        // Each statement owns ~0.26 of the scrubbed timeline: quick rise-in,
+        // a LONG readable hold, then a quick exit. The last statement
+        // ("Reach out") never exits — it stays as the closing CTA with the nav.
+        const start = 0.18 + index * 0.26;
+        const isLast = index === statementData.length - 1;
         const centerOut = {
-          each: 0.004,
+          each: 0.002,
           from: "center",
           ease: "power2.out",
         };
         const edgesOut = {
-          each: 0.003,
+          each: 0.002,
           from: "edges",
           ease: "power2.in",
         };
@@ -393,31 +397,33 @@ export default function AboutContent() {
               autoAlpha: 1,
               yPercent: 0,
               rotationX: 0,
-              rotationZ: 0,
               scale: 1,
               filter: "blur(0px)",
-              duration: 0.08,
+              duration: 0.06,
               stagger: centerOut,
               ease: "expo.out",
             },
             start
-          )
-          .to(
-            split.chars,
-            {
-              autoAlpha: 0,
-              yPercent: -96,
-              rotationX: 58,
-              rotationZ: 2,
-              scale: 1.08,
-              filter: "blur(12px)",
-              duration: 0.08,
-              stagger: edgesOut,
-              ease: "power3.in",
-            },
-            start + 0.12
-          )
-          .set(statement, { opacity: 0 }, start + 0.205);
+          );
+
+        if (!isLast) {
+          closingTimeline
+            .to(
+              split.chars,
+              {
+                autoAlpha: 0,
+                yPercent: -80,
+                rotationX: 36,
+                scale: 1.04,
+                filter: "blur(6px)",
+                duration: 0.05,
+                stagger: edgesOut,
+                ease: "power3.in",
+              },
+              start + 0.18
+            )
+            .set(statement, { opacity: 0 }, start + 0.25);
+        }
       });
 
       closingTimeline.to(
@@ -559,7 +565,7 @@ export default function AboutContent() {
       skillRefs.current.forEach((el, i) => {
         if (!el || !revealedSet.has(i)) return;
         gsap.to(el, {
-          color: i === index ? "#ffffff" : "#939393",
+          color: i === index ? "#f5f2ea" : "#9a9a9a",
           duration: 0.4,
           ease: "power2.out",
           overwrite: "auto",

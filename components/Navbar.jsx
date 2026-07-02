@@ -47,8 +47,8 @@ export default function Navbar() {
         <div className="nav-roll-links">
           <RollLink href="/about" active={isAbout}>About</RollLink>
           <RollLink href={EMAIL_LINK}>Email</RollLink>
-          <RollLink href={LINKEDIN_LINK} target="_blank">in</RollLink>
-          <RollLink href={META_LINK} target="_blank">Meta</RollLink>
+          <RollLink href={LINKEDIN_LINK} target="_blank">LinkedIn</RollLink>
+          <RollLink href={META_LINK} target="_blank">WhatsApp</RollLink>
         </div>
       </nav>
     </header>

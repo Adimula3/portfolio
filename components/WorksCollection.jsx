@@ -146,16 +146,17 @@ export default function WorksCollection() {
                           <h3 className="work-card__title">{work.title}</h3>
                         </div>
 
-                        <a
-                          href={work.link || "#"}
-                          className="work-card__arrow"
-                          aria-label={`Open ${work.title}`}
-                          {...(work.link
-                            ? { target: "_blank", rel: "noopener noreferrer" }
-                            : {})}
-                        >
-                          <span aria-hidden="true">↗</span>
-                        </a>
+                        {work.link && (
+                          <a
+                            href={work.link}
+                            className="work-card__arrow"
+                            aria-label={`Open ${work.title} (opens in a new tab)`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <span aria-hidden="true">↗</span>
+                          </a>
+                        )}
                       </div>
 
                       <div className="work-card__details">

@@ -21,7 +21,9 @@
   z-index: 5;
   contain: layout style paint;
   transform-origin: center center;
-  transition: transform 400ms cubic-bezier(0.76, 0, 0.24, 1);
+  /* "hop" ease — same curve as the About card→fullscreen reveal, so both
+     page intros share one motion signature. */
+  transition: transform 700ms cubic-bezier(0.9, 0, 0.1, 1);
 }
 
 /* Added by JS after the black wipe finishes — scales card to fill viewport */

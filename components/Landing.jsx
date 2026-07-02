@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import WorksIntro from "./WorksIntro";
-import { onPageReady, prefersReducedMotion } from "./animationUtils";
+import { prefersReducedMotion } from "./animationUtils";
 
 const EMAIL_LINK = "mailto:Kolawoleolayinka16@gmail.com";
 const LINKEDIN_LINK = "https://www.linkedin.com/in/olayinka-kolawole-84189a188/";
@@ -34,53 +34,30 @@ function RollLink({ href, children, target }) {
   );
 }
 
-export default function Landing() {
+export default function Landing({ introDone }) {
   const wrapperRef = useRef(null);
 
   useEffect(() => {
+    // The intro loader now overlays real (server-rendered) content instead of
+    // gating it. We wait for the loader to hand off before running the entrance
+    // so the staggered reveal still plays as the loader lifts.
+    if (!introDone) return;
+
     const el = wrapperRef.current;
     if (!el) return;
 
-    const heroTargets = () =>
-      [
-        el.querySelector(".landing__first"),
-        el.querySelector(".landing__last"),
-        ...el.querySelectorAll(".landing__tag-line"),
-        el.querySelector(".available-pill"),
-        ...el.querySelectorAll(".roll-link"),
-      ].filter(Boolean);
-
-    // The hero starts hidden in CSS and is revealed by the entrance animation.
-    // Failsafe: if the engine never boots (very slow network / failed import),
-    // reveal it so it can never get stuck invisible.
-    let revealed = false;
-    const revealStatic = () => {
-      if (revealed) return;
-      revealed = true;
-      heroTargets().forEach((node) => {
-        node.style.opacity = "1";
-        node.style.transform = "none";
-      });
-      const worksIntro = el.querySelector(".works-intro");
-      if (worksIntro) worksIntro.style.opacity = "1";
-    };
-    const failsafe = setTimeout(revealStatic, 6000);
-
+    // The hero itself is revealed synchronously by the `landing--revealed`
+    // class (CSS), in the same React commit that unmounts the loader — the
+    // loader's final frame and the real page are pixel-identical, so there is
+    // no entrance animation to run. This effect only wires scroll behaviour.
     const reduced = prefersReducedMotion();
     let cancelled = false;
     let cleanup = () => {};
 
-    // Boot the animation engine after window.load so it never blocks first paint.
-    const stopReady = onPageReady(async () => {
-      if (cancelled) return;
+    // Reduced motion: content is visible via CSS, native scroll, no engine.
+    if (reduced) return;
 
-      // Reduced motion: show everything immediately, native scroll, no Lenis.
-      if (reduced) {
-        clearTimeout(failsafe);
-        revealStatic();
-        return;
-      }
-
+    (async () => {
       let gsap, CustomEase, ScrollTrigger, Lenis;
       try {
         const mods = await Promise.all([
@@ -94,10 +71,9 @@ export default function Landing() {
         ScrollTrigger = mods[2].ScrollTrigger;
         Lenis = mods[3].default;
       } catch {
-        return; // the failsafe will reveal the hero
+        return; // content is already visible; page degrades to native scroll
       }
       if (cancelled) return;
-      clearTimeout(failsafe);
 
       gsap.registerPlugin(CustomEase, ScrollTrigger);
       CustomEase.create("main", "0.6, 0.01, 0.05, 1");
@@ -109,11 +85,6 @@ export default function Landing() {
       const navLinksArr = Array.from(el.querySelectorAll(".roll-link"));
       const worksIntro  = el.querySelector(".works-intro");
       const navBar      = document.querySelector(".site-header");
-
-      const animTargets = [firstName, lastName, ...tagLinesArr, pill, ...navLinksArr].filter(Boolean);
-      if (!revealed) gsap.set(animTargets, { clearProps: "all" });
-      if (worksIntro) gsap.set(worksIntro, { opacity: 0 });
-      if (navBar) gsap.set(navBar, { opacity: 0, y: -15, pointerEvents: "none" });
 
       // ── Lenis — created first, synced to ScrollTrigger ─────────────
       const lenis = new Lenis({
@@ -130,35 +101,6 @@ export default function Landing() {
       const lenisTickerFn = (time) => lenis.raf(time * 1000);
       gsap.ticker.add(lenisTickerFn);
       gsap.ticker.lagSmoothing(0);
-
-      // ── Entrance animation ──────────────────────────────────────────
-      // Skipped only if the failsafe already revealed the hero (rare).
-      const tl = gsap.timeline();
-      if (!revealed) {
-        tl.fromTo(
-            [firstName, lastName].filter(Boolean),
-            { opacity: 0, y: 60 },
-            { opacity: 1, y: 0, duration: 1.2, stagger: 0.06, ease: "main" }
-          )
-          .fromTo(
-            tagLinesArr,
-            { opacity: 0, y: 16 },
-            { opacity: 1, y: 0, duration: 0.7, stagger: 0.08, ease: "power2.out" },
-            "-=0.7"
-          )
-          .fromTo(
-            [pill].filter(Boolean),
-            { opacity: 0 },
-            { opacity: 1, duration: 0.5, ease: "power2.out" },
-            "-=0.4"
-          )
-          .fromTo(
-            navLinksArr,
-            { opacity: 0, x: 10 },
-            { opacity: 1, x: 0, duration: 0.5, stagger: 0.07, ease: "power2.out" },
-            "<"
-          );
-      }
 
       // ── Scroll-out: scrub directly tied to scroll position ─────────
       // The landing scrolls naturally while elements also animate.
@@ -201,28 +143,56 @@ export default function Landing() {
         },
       });
 
+      // ── Works-intro backdrop: hide once the collection ends ────────
+      // The intro text is a fixed overlay that shows through the transparent
+      // works section (intended). But past the last card it would bleed into
+      // the gap before the footer — fade it out there, back in on scroll-up.
+      // NOTE: never use overwrite here — it would kill the scrubbed timeline's
+      // own opacity tween on this element. We only ever kill our own fade.
+      let introFade;
+      const fadeIntroTo = (opacity) => {
+        if (!worksIntro) return;
+        introFade?.kill();
+        introFade = gsap.to(worksIntro, { opacity, duration: 0.35, ease: "power2.out" });
+      };
+      const worksEl = document.querySelector(".works-collection");
+      const introOutST = worksEl
+        ? ScrollTrigger.create({
+            trigger: worksEl,
+            start: "bottom 112%",
+            onEnter: () => fadeIntroTo(0),
+            // Guard: on instant jumps to the top (scroll restoration, "back to
+            // top"), the landing scrub already owns the intro's opacity — a
+            // late fade-in here would win the race and cover the hero.
+            onLeaveBack: () => {
+              if (window.scrollY > 400) fadeIntroTo(1);
+            },
+          })
+        : null;
+
       cleanup = () => {
-        tl.kill();
         scrollTl.kill();
         navST.kill();
+        introOutST?.kill();
+        introFade?.kill();
         gsap.ticker.remove(lenisTickerFn);
         lenis.destroy();
-        gsap.set(animTargets, { clearProps: "all" });
         if (worksIntro) gsap.set(worksIntro, { clearProps: "all" });
         if (navBar) gsap.set(navBar, { clearProps: "all" });
       };
-    });
+    })();
 
     return () => {
       cancelled = true;
-      clearTimeout(failsafe);
-      stopReady();
       cleanup();
     };
-  }, []);
+  }, [introDone]);
 
   return (
-    <div ref={wrapperRef} className="landing">
+    <div
+      ref={wrapperRef}
+      className={`landing${introDone ? " landing--revealed" : ""}`}
+    >
 
       <div className="landing__content">
 
@@ -230,9 +200,9 @@ export default function Landing() {
         <div className="landing__left">
           <h1 className="landing__first">YINKA</h1>
           <p className="landing__tagline">
-            <span className="landing__tag-line">CREATIVE FRONT-END DEVELOPER</span>
-            <span className="landing__tag-line">BUILDING UNIQUE DIGITAL EXPERIENCES</span>
-            <span className="landing__tag-line">ONE PIXEL AT A TIME</span>
+            <span className="landing__tag-line">FULL-STACK DEVELOPER</span>
+            <span className="landing__tag-line">FROM INTERFACES TO APIS &amp; DATABASES</span>
+            <span className="landing__tag-line">BUILDING DIGITAL PRODUCTS END TO END</span>
           </p>
         </div>
 
@@ -252,8 +222,8 @@ export default function Landing() {
               <nav className="landing__nav" aria-label="Main navigation">
                 <RollLink href="/about">About</RollLink>
                 <RollLink href={EMAIL_LINK}>Email</RollLink>
-                <RollLink href={LINKEDIN_LINK} target="_blank">in</RollLink>
-                <RollLink href={META_LINK} target="_blank">Meta</RollLink>
+                <RollLink href={LINKEDIN_LINK} target="_blank">LinkedIn</RollLink>
+                <RollLink href={META_LINK} target="_blank">WhatsApp</RollLink>
               </nav>
             </div>
           </div>

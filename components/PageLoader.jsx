@@ -29,14 +29,17 @@ export default function PageLoader({ onComplete }) {
     const wrapper = wrapperRef.current;
     if (!card || !wrapper) return;
 
+    // The intro plays on every visit to the homepage — including client-side
+    // returns via the YINKA.KLW logo — by explicit request.
+
     // Reduced motion: skip the colour wipe entirely, hand off almost at once.
     if (prefersReducedMotion()) {
       const t = setTimeout(() => onComplete && onComplete(), 250);
       return () => clearTimeout(t);
     }
 
-    // Warm the animation-engine chunk while the loader plays, so the landing's
-    // entrance fires instantly the moment we hand off.
+    // Warm the animation-engine chunk while the loader plays, so scroll
+    // behaviour is live the moment we hand off.
     prefetchAnimationEngine();
 
     // Scale factors so the card covers 100vw × 100vh exactly
@@ -47,18 +50,16 @@ export default function PageLoader({ onComplete }) {
     card.style.setProperty("--preview-sx", 1 / sx);
     card.style.setProperty("--preview-sy", 1 / sy);
 
-    // After the hero-image wipe finishes, expand to full screen.
+    // After the hero-preview wipe finishes, grow the card into the page.
     const t1 = setTimeout(() => card.classList.add(styles.expanding), 1580);
 
-    // Hand off after the expansion finishes — but also wait for fonts so the
-    // landing text can't reflow the instant it appears. fonts.ready usually
-    // resolves long before 1990ms, so this only adds time in the worst case.
-    let t2;
+    // Hand off once the 700ms grow settles — and wait for fonts so the real
+    // hero underneath is pixel-identical to the replica (no reflow at swap).
     const handoff = () => {
       const fontsReady = document.fonts ? document.fonts.ready : Promise.resolve();
       fontsReady.finally(() => onComplete && onComplete());
     };
-    t2 = setTimeout(handoff, 1990);
+    const t2 = setTimeout(handoff, 2320);
 
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, [onComplete]);
@@ -85,9 +86,9 @@ export default function PageLoader({ onComplete }) {
               <div className="landing__left">
                 <h1 className="landing__first">YINKA</h1>
                 <p className="landing__tagline">
-                  <span className="landing__tag-line">CREATIVE FRONT-END DEVELOPER</span>
-                  <span className="landing__tag-line">BUILDING UNIQUE DIGITAL EXPERIENCES</span>
-                  <span className="landing__tag-line">ONE PIXEL AT A TIME</span>
+                  <span className="landing__tag-line">FULL-STACK DEVELOPER</span>
+                  <span className="landing__tag-line">FROM INTERFACES TO APIS &amp; DATABASES</span>
+                  <span className="landing__tag-line">BUILDING DIGITAL PRODUCTS END TO END</span>
                 </p>
               </div>
 
@@ -102,8 +103,8 @@ export default function PageLoader({ onComplete }) {
                     <nav className="landing__nav">
                       <span className="roll-link">About</span>
                       <span className="roll-link">Email</span>
-                      <span className="roll-link">in</span>
-                      <span className="roll-link">Meta</span>
+                      <span className="roll-link">LinkedIn</span>
+                      <span className="roll-link">WhatsApp</span>
                     </nav>
                   </div>
                 </div>

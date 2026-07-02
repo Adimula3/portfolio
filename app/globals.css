@@ -1,8 +1,7 @@
 /* ============================================================
    globals.css
-   SOURCE: erichuguenin.md — Design tokens, Navbar, Hero
+   Design tokens, Navbar, Hero
    ============================================================ */
-@import url('https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,600,700,900&display=swap');
 
 /* ─── CSS Custom Properties ──────────────────────────────────── */
 :root {
@@ -12,8 +11,9 @@
   --color-text-muted: #9a9a9a;
   --color-border:     rgba(255, 255, 255, 0.14);
 
-  /* Font — loaded via next/font in layout.js */
+  /* Fonts — loaded via next/font in layout.js */
   --font-primary: var(--font-geist, "Arial", sans-serif);
+  --font-serif: var(--font-instrument-serif, Georgia, "Times New Roman", serif);
 
   /* Spacing */
   --gutter:          clamp(24px, 4vw, 60px);
@@ -61,6 +61,14 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+}
+
+/* Keyboard navigation — visible focus ring without affecting mouse users */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
 /* ─── PAGE LOADER (PageLoader.jsx — CSS modules handles its own styles) */
@@ -125,6 +133,11 @@ body {
   background: rgba(5, 5, 5, 0.92);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  /* Hidden at the top of the page; GSAP reveals it on scroll (Landing.jsx).
+     Kept in CSS so it never flashes when the loader overlay lifts.
+     pointer-events restored by the same scroll trigger that fades it in. */
+  opacity: 0;
+  pointer-events: none;
 }
 
 .site-nav {
@@ -419,8 +432,8 @@ body {
 .works-intro__italic {
   position: absolute;
   z-index: 2;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(22px, 3vw, 42px);
+  font-family: var(--font-serif);
+  font-size: clamp(24px, 3.2vw, 46px);
   font-style: italic;
   font-weight: 400;
   line-height: 1;
@@ -747,6 +760,17 @@ body {
   opacity: 0;
 }
 
+/* Revealed state — added in the same React commit that unmounts the intro
+   loader. The loader's final frame is a 1:1 replica of this hero, so the
+   switch is pixel-identical: no entrance animation, no flash. */
+.landing--revealed .landing__first,
+.landing--revealed .landing__last,
+.landing--revealed .landing__tag-line,
+.landing--revealed .available-pill,
+.landing--revealed .roll-link {
+  opacity: 1;
+}
+
 /* Left: tagline */
 .landing__tagline {
   display: flex;
@@ -1050,6 +1074,26 @@ body {
     opacity: 1;
     transform: none;
   }
+
+  /* Details are statically visible on touch layouts, so the shade must
+     guarantee contrast over busy/light video frames at all times. */
+  .work-card__shade,
+  .work-card:hover .work-card__shade {
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.96) 0%,
+      rgba(0, 0, 0, 0.68) 62%,
+      rgba(0, 0, 0, 0.2) 100%
+    );
+  }
+
+  /* Soft shadow lifts text off busy/light video frames. */
+  .work-card__meta,
+  .work-card__title,
+  .work-card__type,
+  .work-card__summary {
+    text-shadow: 0 1px 14px rgba(0, 0, 0, 0.85);
+  }
 }
 
 @media (max-width: 768px) {
@@ -1163,27 +1207,28 @@ body {
   }
 
   .works-intro__inner {
-    width: min(360px, 86vw);
+    width: min(560px, 86vw);
     transform: translateY(-3vh);
   }
 
   .works-intro__eyebrow {
     margin-bottom: 12px;
-    font-size: 9px;
+    font-size: clamp(9px, 1.4vw, 11px);
     letter-spacing: 0.14em;
   }
 
   .works-intro__composition {
-    min-height: clamp(128px, 42vw, 176px);
+    min-height: clamp(128px, 30vw, 232px);
   }
 
   .works-intro__word {
-    font-size: clamp(30px, 11vw, 44px);
+    /* ~34px at 375, ~64px at 768 */
+    font-size: clamp(30px, 9vw, 64px);
     line-height: 0.9;
   }
 
   .works-intro__italic {
-    font-size: clamp(21px, 7vw, 30px);
+    font-size: clamp(21px, 5.5vw, 42px);
   }
 
   .works-intro__of {
@@ -1356,7 +1401,8 @@ body {
 
   .landing__first,
   .landing__last {
-    font-size: clamp(40px, 14.2vw, 62px);
+    /* Scales through the whole phone→tablet range: ~50px at 375, ~100px at 768 */
+    font-size: clamp(42px, 13.5vw, 100px);
     line-height: 0.9;
     letter-spacing: 0;
   }
@@ -1368,12 +1414,15 @@ body {
 
   .landing__tagline {
     order: 3;
-    margin-top: clamp(18px, 4.5vh, 34px);
-    max-width: min(315px, 86vw);
+    /* Push the tagline + pill/nav cluster to the bottom of the viewport so
+       the hero uses the full screen height instead of clustering at the top. */
+    margin-top: auto;
+    padding-top: 24px;
+    max-width: min(340px, 86vw);
   }
 
   .landing__tag-line {
-    font-size: clamp(9px, 2.7vw, 11px);
+    font-size: clamp(10px, 1.9vw, 14px);
     line-height: 1.18;
   }
 
@@ -1421,9 +1470,17 @@ body {
   .landing__tag-line,
   .landing .available-pill,
   .landing .roll-link,
-  .works-intro {
+  .site-header {
     opacity: 1 !important;
     transform: none !important;
+  }
+
+  /* NOTE: .works-intro is deliberately NOT forced visible — it is a fixed,
+     full-viewport, opaque overlay that would cover the hero. It stays hidden
+     for reduced-motion users; the works section below it is fully readable. */
+
+  .site-header {
+    pointer-events: auto !important;
   }
 
   /* Calm the per-letter hover roll into a simple, quick fade. */
